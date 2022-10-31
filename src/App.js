@@ -1,26 +1,65 @@
-import logo from './logo.svg';
 import './App.css';
-
+import NombreFoto from './components/NombreFoto'
+import CampoConArray from './components/CampoConArray';
+import Flechita from './components/Flechita';
+import data from './data/datoMentores'
+import { useState } from 'react'
 function App() {
+  
+  let [mostrarOcultar,setMostrarOcultar] = useState(false)
+  let [numeroAcambiar,setNumeroAcambiar] = useState(0)
+  //El hook de estado esta compuesto por dos Elementos
+  //primer elemento es la variable que tiene que cambiar
+  //segundo elemento la funcion que va a modificar/setear esa variable
+  //es necesiario PRE-DEFINIR con que valor inciia el estado (adentro del parentesis del hook de estado)
+  let hide = () => {
+    setMostrarOcultar(!mostrarOcultar)
+  }
+  let next = () =>{
+    if(numeroAcambiar < data.length-1){
+      setNumeroAcambiar(++numeroAcambiar)
+    }else{
+      setNumeroAcambiar(0)
+    }
+  }
+  let prev = () =>{
+    if(numeroAcambiar>0){
+      setNumeroAcambiar(--numeroAcambiar)
+    }else{
+      setNumeroAcambiar(data.length -1)
+    }
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo"/>
-        <p>
-          German Pungitore
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='card black'>
+    <NombreFoto nombre= {data[numeroAcambiar].nombre} foto={data[numeroAcambiar].foto}/>
+    {/*VAMOS A ARMAR UN CONDICIONAL QUE DEPENDA DEL BOOLEANO DEL EVENTO*/}
+    {
+      mostrarOcultar ? ( <>
+      <p className='gray flex j-center a-center' onClick={hide}>Ocultar info</p>
+      <div className='edad-fecha'>
+      <p className='datos white r25 edad'>Edad: {data[numeroAcambiar].edad}</p>
+      <p className='datos white l25 fecha'>Fecha: {data[numeroAcambiar].nacimiento}</p>
+      </div>
+      <div className='datos white flex a-center'>
+      <p>Mail: {data[numeroAcambiar].mail}</p>
+     </div>
+     <CampoConArray titulo = 'Hobbies' datos = {data[numeroAcambiar].hobbies.join(' y ')}/>
+     <CampoConArray titulo = 'Comidas' datos = {data[numeroAcambiar].comidas.join(' y ')}/>
+      </>) 
+      : 
+      (<p className='gray flex j-center a-center' onClick={hide}>Mostrar info</p>
+      )
+    }
+    <div className='flex j-center a-center'>
+      <Flechita estilo ='r25' verbo = 'Anterior' onClick ={prev}/>
+      <Flechita estilo ='l25' verbo = 'Siguiente' onClick={next}/>
+      {/*los eventos en los componentes se pasan como propiedades/metodos NO COMO EVENTOS*/}
+      {/*por eso es necesario desestructurarlo adentro del componente*/ }
+      {/*y aplciarlo en la etiqueta HTML que corresponda*/}
     </div>
+  </div>
   );
 }
-//Linea 8 para usar una variable JS, se emplea directamente con {} 
+//Para usar una variable JS, se emplea directamente con {} 
 
 export default App;
